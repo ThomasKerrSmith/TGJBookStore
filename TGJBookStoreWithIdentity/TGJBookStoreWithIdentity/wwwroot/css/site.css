@@ -1,0 +1,75 @@
+/*JONATHAN SIVANANTHAN STYLING PAGE
+    17 NOV 2022
+*/
+
+
+html {
+    font-size: 14px;
+    color: #3B4252;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+
+body {
+    margin-bottom: 60px;
+    background-image: url('../background1.jpg');
+}
+
+/*FOR h1 PAGE HEADINGS*/
+h1 {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-family: Britannic;
+    font-style: italic;
+    color: #a7967d;
+}
+
+h2 {
+}
+
+/*the navbar links*/
+.nav-link {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.1em;
+    color: #daa520
+}
+
+.btn-primary{
+    background-color:#daa520 !important;
+    border-color: #a7967d !important;
+
+}
+
+a {
+    color:#a7967d;
+    text-decoration:none;
+    
+}
+
+th 
+{
+    color: #5f5340;
+    padding: 15px;
+}
+
+td{
+    padding:15px;
+}
+
+a:hover 
+{
+    color:#daa520;
+}
+
+#shoptable
+{
+    padding: 15px !important;
+}

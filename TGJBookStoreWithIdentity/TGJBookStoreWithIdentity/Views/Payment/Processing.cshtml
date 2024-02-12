@@ -1,0 +1,18 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+@*view for processed payment - return user identity and amount - TKS*@
+<div class="text-center">
+    <form asp-action="Processing" asp-controller="Payment" method="post">
+
+        <label class="text-info">Your Payment has been successfully processed</label>
+        <br />
+        <br />
+        <p class="blockquote text-center">
+            The details of the transaction are  <br />
+            Confirmation Email will be sent to - @User.Identity?.Name! <br />
+            Amount : $ @ViewBag.AmountPaid
+        </p>
+    </form>
+</div>

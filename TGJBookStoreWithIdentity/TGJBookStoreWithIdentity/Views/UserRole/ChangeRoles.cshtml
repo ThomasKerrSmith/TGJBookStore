@@ -1,0 +1,49 @@
+﻿
+<!--ALL COMMENTS AND CODE BY JONATHAN SIVANANTHAN-->
+
+@using TGJBookStoreWithIdentity.ViewModels
+@model List<UserRoleManagerViewModel>
+@{
+    ViewData["Title"] = "ChangeRoles";
+}
+<form method="post">
+   
+<!--Bootstrap Card Title Bar-->
+    
+    <div class="card">
+        <div class="card-header">
+            <h2>Update Roles</h2>
+            Update Roles for: <strong>@ViewBag.UserName</strong>
+        </div>
+
+<!--Card Body-->
+        
+        <div class="card-body">
+
+            @for (int i = 0; i < Model.Count; i++) //iterate the UserRoleManagerViewModel list that was passed into this action
+            {
+                //the form for updating roles (fetches roleID and roleName using index location)
+                <div class="form-check">
+                    <input type="hidden" asp-for="@Model[i].RoleId"/>
+                    <input type="hidden" asp-for="@Model[i].RoleName"/>
+
+                    <input asp-for="@Model[i].isSelected" class="form-check-input"/>
+
+                    <!--gets labels for each role name-->
+                    <label class="form-check-label" asp-for="@Model[i].isSelected">
+                        @Model[i].RoleName
+                    </label>
+                </div>
+            }
+        </div>
+
+<!--Card Footer Panel-->
+
+        <div class="card-footer">
+            <input type="submit" value="Update" class="btn btn-primary" style="width:auto"/>
+
+            <a asp-action="Index" asp-route-id="@ViewBag.userId" class="btn btn-warning">Cancel</a>
+        </div>
+
+    </div> <!--close card-->
+</form>

@@ -1,0 +1,95 @@
+﻿@model IPagedList<TGJBookStoreWithIdentity.Models.Review>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+
+@*Created by GM 20/11/22*@
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Book Reviews</h1>
+@if (User.IsInRole("Admin") || (User.IsInRole("Developer")) || (User.IsInRole("Auditor")) || (User.IsInRole("Staff")) || (User.IsInRole("User")))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
+@*search for book title*@
+<form id="searchForm" action="/Review/Index" method="get" autocomplete="off">
+    <p>
+        Search Book Title:
+        <div>
+            @*Search title textfield input*@
+            <input type="text" id="searchString" name="searchString" autocomplete="off" onkeyup="XAjaxRequest(this.value);" style="width: 180px" value="@ViewData["CurrentFilter"]" />
+            @*Submit search button*@
+            <input type="submit" value="Search" />
+            @*Clear search link*@
+            <a asp-action="Index">Clear Search</a>
+            <br />
+            <div id="autoSuggestContainer" style="position:absolute;display:none;z-index:100;">
+            </div>
+        </div>
+
+    </p>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().BookTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Reviewer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Rating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reviewer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+                <td>
+                    @if (User.IsInRole("Admin") || (User.IsInRole("Developer")) || (User.IsInRole("Auditor")))
+                    {
+                        <a class="btn btn-primary mb-2" asp-action="Edit" asp-route-id="@item.ReviewId">Edit</a>
+                        <a class="btn btn-primary mb-2" asp-action="Delete" asp-route-id="@item.ReviewId">Delete</a>
+                    }
+                    <a class="btn btn-primary mb-2" asp-action="Details" asp-route-id="@item.ReviewId">Details</a>
+                </td>
+            
+            
+        </tr>
+}
+    </tbody>
+</table>
+@Html.PagedListPager(Model, page => Url.Action("Index",
+        new { Page = page }),
+        new PagedListRenderOptions
+        {
+            LiElementClasses = new string[] { "page-item" },
+            PageClasses = new string[] { "page-link" }
+    })

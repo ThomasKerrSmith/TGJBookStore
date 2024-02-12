@@ -1,0 +1,46 @@
+﻿<!--ALL COMMENTS BY JONATHAN SIVANANTHAN 9 NOV-->
+
+@model List<Microsoft.AspNetCore.Identity.IdentityRole>
+@{
+    ViewData["Title"] = "Rolesr";
+}
+<h1>Add or View All Roles</h1>
+
+<!--roles table-->
+
+<table class="table table-light">
+    <thead>
+        <tr>
+            <th>Role Id</th>
+            <th>Role Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var role in Model) //all roles in IdentityRole
+        {
+            <tr>
+                <td>@role.Id</td>
+                <td>@role.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<!--add role form-->
+
+
+<form method="post" asp-action="AddNewRole" asp-controller="RoleManagement">
+    <div class="input-group input-group-sm mb-3">
+
+    <div class="input-group-prepend">
+
+        <span class="input-group-text input-group-sm mb-3">New Role Name:</span>
+
+        <input name="role" class="form-control input-group-sm mb-3">
+
+        <span class="input-group-btn"> 
+                <button class="w-100 btn btn-sm btn-primary">Add Role</button>
+        </span>
+    </div>
+</form>

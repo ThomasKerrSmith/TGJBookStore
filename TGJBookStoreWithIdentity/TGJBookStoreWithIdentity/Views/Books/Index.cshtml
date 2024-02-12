@@ -1,0 +1,144 @@
+﻿@model PaginatedList<TGJBookStoreWithIdentity.Models.Books>
+@{
+    ViewData["Title"] = "Index";
+}
+@*
+whole page TKS aprt form grifyn tags *@
+<h1>Bookshop</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+@*Search form - Grifyn - 17/11/22*@ 
+<form id="searchForm" action="/Books/Index" method="get" autocomplete="off">
+    <p>
+        Search Book Title:
+        <div>
+            @*Search title textfield input*@
+            <input type="text" id="searchString" name="searchString" autocomplete="off" onkeyup="XAjaxRequest(this.value);" style="width: 180px" value="@ViewData["CurrentFilter"]"/>           
+            @*Submit search button*@
+            <input type="submit" value="Search" />
+            @*Clear search link*@
+            <a asp-action="Index">Clear Search</a>
+            <br />
+            <div id="autoSuggestContainer" style="position:absolute;display:none;z-index:100;">
+            </div>
+        </div>
+
+    </p>
+</form>
+
+@*Applying sort parametres to coloumns - Grifyn 17/11/22*@
+<table id="shoptable" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@Html.DisplayNameFor(model => model.First().Title)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@Html.DisplayNameFor(model => model.First().Author)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@Html.DisplayNameFor(model => model.First().Price)</a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Description)
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["GenreSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@Html.DisplayNameFor(model => model.First().Genre)</a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genre)
+            </td>
+            <td>
+                @*authorize roles - TKS*@ 
+                    @if (User.IsInRole("Admin") || (User.IsInRole("Developer")) || (User.IsInRole("Auditor"))) 
+                    {
+                        <a class="btn btn-primary mb-2" asp-action="Edit" asp-route-id="@item.BookId">Edit</a>
+                        <a class="btn btn-primary mb-2" asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+                    }
+                    <a class="btn btn-primary mb-2" asp-action="Details" asp-route-id="@item.BookId">Details</a>
+
+                    @if (User.IsInRole("Admin") || (User.IsInRole("Developer")) || (User.IsInRole("Auditor")) || (User.IsInRole("User")))
+                    {
+                        <a class="btn btn-primary mb-2" asp-controller="Cart" asp-action="Add" asp-route-id="@item.BookId">Add to Cart</a>
+                        <a class="btn btn-primary mb-2" asp-controller="Wishlist" asp-action="Add" asp-route-id="@item.BookId">Add to Wishlist</a>
+                    }
+                </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+@*Previous and next button to go through pages of books - Grifyn -17/11/22*@
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>
+
+@*Script for auto suggested search - Grifyn - 17/11/22*@
+<script type="text/javascript">
+    function XAjaxRequest(searchString) {
+        if (searchString.length < 3) {
+            document.getElementById("autoSuggestContainer").innerHTML = "";
+            return;
+        }
+
+        var xmlhttp;
+        xmlhttp = new XMLHttpRequest();
+        var url = "/Books/IndexAJAX?searchString=" + searchString;
+        xmlhttp.open("GET", url, false);
+        xmlhttp.send();
+        document.getElementById("autoSuggestContainer").style.display = "block";
+        document.getElementById("autoSuggestContainer").innerHTML = "";
+        var messageObject = JSON.parse(xmlhttp.responseText);
+        var autoSuggestions = "";
+
+        for (var i = 0; i < messageObject.length; i++) {
+            autoSuggestions +=
+                "<input type=\"button\" value=\"" + messageObject[i].Title + "\" "
+                + "onclick=\"document.getElementById('searchString').value = this.value; document.getElementById('searchForm').submit();\" "
+                + "style =\"width: 280px\" />";
+            autoSuggestions += "<br />";
+        }
+        document.getElementById("autoSuggestContainer").innerHTML = autoSuggestions;
+    }
+</script>

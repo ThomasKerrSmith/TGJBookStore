@@ -1,0 +1,36 @@
+﻿<!--ALL COMMENTS AND CODE BY JONATHAN SIVANANTHAN-->
+
+@using TGJBookStoreWithIdentity.ViewModels
+@using TGJBookStoreWithIdentity.Models
+@model List<TGJBookStoreWithIdentity.ViewModels.UserRoleViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Users</h1>
+<table class="table table-light">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model) //custom class UserRoleViewModel
+        {
+            <tr>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Email</td>
+                <td>@string.Join(" , ", user.Roles.ToList())</td> <!--adding roles as IEnumerable in custom class-->
+                <td>
+                    <a class="btn btn-warning" asp-controller="UserRole" asp-action="ChangeRoles" asp-route-userId="@user.UserId">Change Roles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
