@@ -67,7 +67,7 @@ var app = builder.Build();
 app.UseSession();
 
 //Secret Key for stripe account - TKS
-StripeConfiguration.ApiKey = "sk_test_51LzZChEVtaslvauzQ8PVFw5IP7TSiyhhl9bEZqeAnMyl14E4Q9TPQOnfniyD4zbkRYYq4ND9lxEUSc02JAOY9Ixa005dknLLAR";
+StripeConfiguration.ApiKey = "";
 
 
 
